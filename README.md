@@ -13,7 +13,7 @@
 - **Audio :** Audacity, Bfxr, LMMS
 
 ### **3. Mécaniques de Jeu**
-- **Contrôles du joueur :** Saut, double saut, dash, grimpe
+- **Contrôles du joueur :** Saut, double saut, dash, grimpe, wall jump
 - **Physique :** Gestion de la gravité, collision, friction
 - **Niveaux :** Conception de différents niveaux avec des plateformes, des pièges, des ennemis, etc.
 - **Progression :** Système de checkpoints, sauvegarde de la progression
