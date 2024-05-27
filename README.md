@@ -1,3 +1,5 @@
+#Phaser game like celeste
+
 ### **1. Conceptualisation et Planification**
 - **Idée de base :** Définir l'objectif principal du jeu, le scénario, et le thème général.
 - **Documentation :** Créer un Game Design Document (GDD) décrivant tous les aspects du jeu.
