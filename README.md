@@ -1,6 +1,6 @@
 # Phaser game like celeste
 
-### Vous trouverez dans la majorité des dossiers un README pour expliquer comment fonctionne phaser
+### <ins> Vous trouverez dans la majorité des dossiers un README pour expliquer comment fonctionne phaser <ins>
 
 ### **1. Conceptualisation et Planification**
 - **Idée de base :** Définir l'objectif principal du jeu, le scénario, et le thème général.
