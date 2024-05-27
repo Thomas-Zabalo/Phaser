@@ -1,4 +1,4 @@
-####### Phaser game like celeste
+# Phaser game like celeste
 
 ### **1. Conceptualisation et Planification**
 - **Idée de base :** Définir l'objectif principal du jeu, le scénario, et le thème général.
