@@ -1,7 +1,6 @@
-import Phaser from './lib/phaser.js';
-import Game from './Game.js';
+import Game from "./game.js";
 
-const game = {
+const gameConfig = {
     type: Phaser.AUTO,
     parent: 'game-container',
     width: 700,
@@ -16,5 +15,4 @@ const game = {
     scene: [Game]
 };
 
-
-export default new Phaser.Game(game);
+export default new Phaser.Game(gameConfig);
