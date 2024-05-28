@@ -1,3 +1,4 @@
+import Main from "./main.js";
 import Game from "./game.js";
 
 const gameConfig = {
@@ -9,10 +10,11 @@ const gameConfig = {
         default: 'arcade',
         arcade: {
             gravity: { y: 500 },
-        }
+            debug: true,
+        },
     },
     pixelArt: true,
-    scene: [Game]
+    scene: [Main, Game]
 };
 
 export default new Phaser.Game(gameConfig);

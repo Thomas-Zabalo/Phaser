@@ -4,10 +4,8 @@ export default class Main extends Phaser.Scene {
     }
 
     preload() {
-        // Vous pouvez charger des ressources ici si nécessaire
     }
-
-    // Fonction de création des éléments du jeu
+ 
     create() {
         const button1 = this.add.text(40, 200, 'Button 1', { backgroundColor: '#CCCCCC' })
             .setInteractive()
