@@ -15,7 +15,7 @@ export default function animation() {
         key: 'rightjump',
         frames: this.anims.generateFrameNumbers('rightjump', { start: 0, end: 3 }),
         frameRate: 8,
-        repeat: -1
+        repeat: 0
     });
     this.anims.create({
         key: 'rightsitdown',
