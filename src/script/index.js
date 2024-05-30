@@ -1,11 +1,12 @@
+// import Menu from "./menu.js";
 import Main from "./main.js";
 import Game from "./game.js";
 
 const gameConfig = {
     type: Phaser.AUTO,
     parent: 'game-container',
-    width: 700,
-    height: 320,
+    width: 800,
+    height: 600,
     physics: {
         default: 'arcade',
         arcade: {
@@ -14,7 +15,9 @@ const gameConfig = {
         },
     },
     pixelArt: true,
-    scene: [Main, Game]
+    antialias: true,
+    antialiasGL: true,
+    scene: [ Main, Game]
 };
 
 export default new Phaser.Game(gameConfig);

@@ -11,7 +11,7 @@ export default class Game extends Phaser.Scene {
         // Load Map
         this.load.image("Mur", "/src/assets/textures/wall/textures-factory.png");
 
-        this.load.tilemapTiledJSON("carte", "/src/assets/maps/MapCyberPsychose.json");
+        this.load.tilemapTiledJSON("carte", "/src/assets/maps/map2con.json");
 
         sprite.call(this);
     }
@@ -20,11 +20,9 @@ export default class Game extends Phaser.Scene {
     create() {
         const carteDuNiveau = this.add.tilemap("carte");
     
-        // Ensure these names match exactly with your JSON file
-        const murTileset = carteDuNiveau.addTilesetImage("Mur", "textures-factory");
+      const murTileset = carteDuNiveau.addTilesetImage("textures-factorylebon", "Mur");
         const murLayer = carteDuNiveau.createLayer("Calque de Tuiles 1", murTileset, 0, 0);
     
-        //Ajout de collision pour les murs
         murLayer.setCollisionByProperty({ solid: true });
     
         // Création du joueur
@@ -35,7 +33,7 @@ export default class Game extends Phaser.Scene {
         // Création des animations
         this.createAnimations();
 
-        this.physics.add.collider(this.player, murLayer);
+        // this.physics.add.collider(this.player, murLayer);
     
         this.cursors = this.input.keyboard.createCursorKeys();
         this.jumpButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
