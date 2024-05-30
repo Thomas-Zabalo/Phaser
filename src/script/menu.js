@@ -4,11 +4,11 @@ export default class Menu extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('rectangle', '/src/assets/textures/hud/Rectangle.png');
-        this.load.image('play', '/src/assets/textures/hud/play.png');
-        this.load.image('load', '/src/assets/textures/hud/load.png');
-        this.load.image('settings', '/src/assets/textures/hud/settings.png');
-        this.load.image('exit', '/src/assets/textures/hud/exit.png');
+        this.load.image('rectangle', '/src/assets/textures/ui/menu/Rectangle.png');
+        this.load.image('play', '/src/assets/textures/ui/menu/play.png');
+        this.load.image('load', '/src/assets/textures/ui/menu/load.png');
+        this.load.image('settings', '/src/assets/textures/ui/menu/settings.png');
+        this.load.image('exit', '/src/assets/textures/ui/menu/exit.png');
     }
 
     create() {
@@ -38,36 +38,39 @@ export default class Menu extends Phaser.Scene {
             const button = this.add.image(btn.x, btn.y, btn.key).setOrigin(0.5, 0);
             button.setDisplaySize(220, 40);
 
-            button.setInteractive();
+            // Gestion des événements sur les boutons
+            button.setInteractive()
+                .on('pointerdown', () => {
+                    if (btn.key === 'play') {
+                        button.on('pointerdown', () => {
+                            this.scene.start('Main');
+                        });
+                    }
+                });
+
             button.on('pointerover', () => {
-                this.fx(button);
-            });
-            button.on('pointerout', () => {
-                button.clearTint();
+                // Ajouter l'effet de brillance s'il n'existe pas déjà
+                if (!button.shineFX) {
+                    button.shineFX = button.postFX.addShine(1, 0.2, 5);
+                }
+
+                // Changer le style du bouton et le curseur
+                button.setTint(0xFF8822);
+                this.input.setDefaultCursor('pointer');
             });
 
-            if (btn.key === 'play') {
-                button.on('pointerdown', () => {
-                    this.scene.start('Main'); // Naviguer vers la scène 'Main'
-                });
-            }
+            button.on('pointerout', () => {
+                // Supprimer l'effet de brillance
+                if (button.shineFX) {
+                    button.postFX.remove(button.shineFX);
+                    button.shineFX = null;
+                }
+
+                // Restaurer le style du bouton et le curseur
+                button.clearTint();
+                this.input.setDefaultCursor('default');
+            });
         });
 
-        function fx(button) {
-            // Ajout de l'effet de brillance
-            const fx = button.postFX.addShine(1, 0.2, 5);
-
-            // Effet de Tween pour briller
-            this.tweens.add({
-                targets: fx,
-                duration: 500,
-                alpha: 0, // Éteindre la brillance après un certain temps
-                onComplete: () => {
-                    button.clearTint();
-                }
-            });
-        }
-
     }
-
 }
