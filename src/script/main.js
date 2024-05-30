@@ -7,6 +7,7 @@ export default class Main extends Phaser.Scene {
         this.load.image('biker_card', '/src/assets/textures/ui/selection/biker_card.png')
         this.load.image('cyber_card', '/src/assets/textures/ui/selection/cyborg_card.png')
         this.load.image('punk_card', '/src/assets/textures/ui/selection/punk_card.png')
+        this.load.image('button', '/src/assets/textures/ui/selection/button.png')
 
         this.load.spritesheet('biker', `/src/assets/characters/biker/Idle1.png`, { frameWidth: 48, frameHeight: 48 });
         this.load.spritesheet('cyborg', `/src/assets/characters/cyborg/Idle1.png`, { frameWidth: 48, frameHeight: 48 });
@@ -14,11 +15,15 @@ export default class Main extends Phaser.Scene {
     }
 
     create() {
+        const sceneWidth = this.cameras.main.width;
+        const sceneHeight = this.cameras.main.height;
+
         // Créer les animations
         this.createAnimations();
 
-        const sceneWidth = this.cameras.main.width;
-        const sceneHeight = this.cameras.main.height;
+        const text1 = this.add.text(sceneWidth / 2, 72, 'select your character', { font: '48px Cyber' });
+        text1.setTint(0xFFFFFF);
+        text1.setOrigin(0.5, 0);
 
         const cardKeys = ['biker_card', 'cyber_card', 'punk_card'];
 
@@ -26,60 +31,66 @@ export default class Main extends Phaser.Scene {
         const cardWidth = 200;
         const spacing = 60;
 
+        // Calcul de la largeur totale des cartes et de l'espace disponible pour le spacing
         const totalCardWidth = cardKeys.length * cardWidth;
-        const availableWidthCard = sceneWidth - totalCardWidth - spacing * (cardKeys.length - 1);
-        const leftMarginCard = availableWidthCard / 2;
+        const availableWidth = sceneWidth - totalCardWidth - spacing * (cardKeys.length - 1);
+        const leftMargin = availableWidth / 2;
 
         // Position initiale des cartes
-        let currentXCard = leftMarginCard;
+        let currentX = leftMargin;
 
         // Création et positionnement des cartes
         cardKeys.forEach(key => {
-            const card = this.add.image(currentXCard, sceneHeight / 2, key).setOrigin(0, 0.5);
-            card.setDisplaySize(cardWidth, 300);
-            currentXCard += cardWidth + spacing;
+            const card = this.add.image(currentX, sceneHeight / 1.9, key).setOrigin(0, 0.5);
+            card.setDisplaySize(cardWidth, 260);
+            currentX += cardWidth + spacing;
         });
 
+        // Créer les sprites animés au-dessus des boutons
+        const bikerSprite = this.add.sprite(185, 300, 'biker').play('bikerAnim').setScale(5);
+        const cyborgSprite = this.add.sprite(450, 300, 'cyborg').play('cyborgAnim').setScale(5);
+        const punkSprite = this.add.sprite(710, 300, 'punk').play('punkAnim').setScale(5);
 
-        const spriteKeys = ['biker', 'cyborg', 'punk'];
+        const buttons = [
+            { key: 'button', x: sceneWidth / 6, y: 500, name: "biker" },
+            { key: 'button', x: sceneWidth / 2, y: 500, name: "cyborg" },
+            { key: 'button', x: sceneWidth * 0.83, y: 500, name: "punk" },
+        ];
 
-        const spriteWidth = 64; 
+        buttons.forEach(btn => {
+            const button = this.add.image(btn.x, btn.y, btn.key).setOrigin(0.5, 0);
+            button.setDisplaySize(220, 40);
 
-        const totalSpriteWidth = spriteKeys.length * spriteWidth;
-        const availableWidthSpirte = sceneWidth - totalSpriteWidth - spacing * (spriteKeys.length - 1);
-        const leftMarginSprite = availableWidthSpirte / 2;
+            // Gestion des événements sur les boutons
+            button.setInteractive()
+                .on('pointerdown', () => {
+                    localStorage.setItem('selectedButton', btn.name);
+                    this.scene.start('game');
+                });
 
-        // Position initiale des cartes
-        let currentXSprite = leftMarginSprite;
+            button.on('pointerover', () => {
+                // Ajouter l'effet de brillance s'il n'existe pas déjà
+                if (!button.shineFX) {
+                    button.shineFX = button.postFX.addShine(1, 0.2, 5);
+                }
 
-        // Création et positionnement des sprites
-        spriteKeys.forEach(key => {
-            const sprite = this.add.sprite(currentXSprite, 100, key).setScale(5);
-            sprite.anims.play(key + 'Anim');
-            currentXSprite += spriteWidth + spacing;
+                // Changer le style du bouton et le curseur
+                button.setTint(0xFF8822);
+                this.input.setDefaultCursor('pointer');
+            });
+
+            button.on('pointerout', () => {
+                // Supprimer l'effet de brillance
+                if (button.shineFX) {
+                    button.postFX.remove(button.shineFX);
+                    button.shineFX = null;
+                }
+
+                // Restaurer le style du bouton et le curseur
+                button.clearTint();
+                this.input.setDefaultCursor('default');
+            });
         });
-
-        // Créer les boutons
-        const button1 = this.add.text(40, 200, 'Button 1', { backgroundColor: '#CCCCCC' })
-            .setInteractive()
-            .on('pointerdown', () => {
-                localStorage.setItem('selectedButton', 'biker');
-                this.scene.start('game');
-            });
-
-        const button2 = this.add.text(200, 200, 'Button 2', { backgroundColor: '#CCCCCC' })
-            .setInteractive()
-            .on('pointerdown', () => {
-                localStorage.setItem('selectedButton', 'cyborg');
-                this.scene.start('game');
-            });
-
-        const button3 = this.add.text(360, 200, 'Button 3', { backgroundColor: '#CCCCCC' })
-            .setInteractive()
-            .on('pointerdown', () => {
-                localStorage.setItem('selectedButton', 'punk');
-                this.scene.start('game');
-            });
     }
 
 
