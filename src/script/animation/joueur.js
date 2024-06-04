@@ -3,6 +3,7 @@ export default function deplacement() {
     const isJumping = !this.player.body.blocked.down;
     const isFalling = this.player.body.velocity.y > 0;
     const isOnGround = this.player.body.blocked.down;
+    var isCrouched = false;
 
     if (this.cursors.left.isDown) {
         this.player.setVelocityX(-normalSpeed);
@@ -21,7 +22,7 @@ export default function deplacement() {
         }
     }
 
-    if (this.jumpButton.isDown && isOnGround) {
+    if (this.jumpButton.isDown && isOnGround || this.cursors.up.isDown && isOnGround) {
         this.player.setVelocityY(-250);
         this.player.anims.play('jump', true);
     }
@@ -36,5 +37,17 @@ export default function deplacement() {
                 this.player.setFrame(0);
             }
         }
+    }
+
+    if (this.cursors.down.isDown && isOnGround) {
+        this.player.setSize(15, 20  , false).setOffset(0, 18);
+        this.player.anims.play('crouch', true);
+        isCrouched = true;
+    }   
+
+    if (this.cursors.down.isUp && isCrouched === true) {
+        isCrouched = false;
+        this.player.setSize(10, 35);
+        this.player.setOffset(10, 13);
     }
 }

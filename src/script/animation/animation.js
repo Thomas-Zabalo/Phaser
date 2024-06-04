@@ -41,6 +41,12 @@ export default function animation() {
         frameRate: 8,
         repeat: -1
     });
+    this.anims.create({
+        key: 'crouch',
+        frames: this.anims.generateFrameNumbers('crouch', { start: 0, end: 3 }),
+        frameRate: 3,
+        repeat: 0
+    });
 
 
 
