@@ -5,9 +5,13 @@ import sprite from "../animation/sprite.js";
 export default class Cinematique extends Phaser.Scene {
     constructor() {
         super('cinematique');
+        this.isJumping = false;
+        this.fadeTriggered = false;
     }
 
     preload() {
+        this.load.spritesheet("cat_death", "/src/assets/animals/cat/Death.png", { frameWidth: 48, frameHeight: 48 });
+
         this.load.image("Mur", "/src/assets/textures/wall/textures-factory.png");
         this.load.image("Background", "/src/assets/textures/wall/Background.png");
         this.load.image("Bat1", "/src/assets/textures/wall/Bat1.png");
@@ -34,52 +38,96 @@ export default class Cinematique extends Phaser.Scene {
         const SecondLayer = carteDuNiveau.createLayer("Second_Plan", SecondTileset);
         const murLayer = carteDuNiveau.createLayer("First_Plan", murTileset, 0, 0);
 
-        // Set collision properties for the wall layer
         murLayer.setCollisionByProperty({ collide: true });
 
-        this.player = this.physics.add.sprite(0, 0, 'idle').setScale(2);
-        this.player.setSize(10, 40);
-        this.player.setOffset(10, 10);
+        this.player = this.physics.add.sprite(0, 275, 'idle').setScale(1.5);
+        this.player.setSize(10, 35);
+        this.player.setOffset(10, 13);
         this.player.setCollideWorldBounds(true);
 
-        // Create animations
+        this.cat = this.add.sprite(175, 175, 'cat_death');
+
         this.createAnimations();
 
-        // Add collider between the player and the wall layer
         this.physics.add.collider(this.player, murLayer);
-
-        // Camera follow player and set bounds to the size of the tilemap
-        this.cameras.main.startFollow(this.player);
-
-        // Set the bounds of the camera to the size of the tilemap
         this.cameras.main.setBounds(0, 0, carteDuNiveau.widthInPixels, carteDuNiveau.heightInPixels);
 
-        // Set the bounds of the world to the size of the tilemap
         this.physics.world.setBounds(0, 0, carteDuNiveau.widthInPixels, carteDuNiveau.heightInPixels);
-
-        // Set the initial zoom level of the camera
         this.cameras.main.setZoom(2);
 
-        this.cursors = this.input.keyboard.createCursorKeys();
-        this.jumpButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.cameras.main.pan(300, 200, 2000)
+        this.time.delayedCall(2000, this.startAutoMovement, [], this);
+
     }
+
+
+
 
     createAnimations() {
         animation.call(this);
+        this.anims.create({
+            key: 'cat_death',
+            frames: this.anims.generateFrameNumbers('cat_death', { start: 0, end: 3 }),
+            frameRate: 6,
+            repeat: -1
+        });
+
+        this.cat.setFrame(3);
+    }
+
+
+
+    startAutoMovement() {
+        this.tweens.add({
+            targets: this.player,
+            x: 340,
+            duration: 2000,
+            onUpdate: () => {
+                if (!this.isJumping) {
+                    this.player.anims.play('run', true);
+                }
+            },
+            onComplete: () => {
+                this.player.anims.play('idle', true);
+                this.time.delayedCall(2000, this.startJump, [], this);
+            }
+        });
+    }
+
+    startJump() {
+        this.isJumping = true;
+        this.player.anims.play('jump', true);
+        this.time.addEvent({
+            delay: 0,
+            callback: () => {
+                this.player.setVelocityY(-200);
+                this.tweens.add({
+                    targets: this.player,
+                    x: this.player.x + 200,
+                    duration: 1500,
+                    onComplete: () => {
+                        this.player.setVelocityY(0);
+                        this.isJumping = false;
+                        this.player.anims.play('idle', true);
+                    }
+                });
+            },
+            callbackScope: this
+        });
     }
 
     update() {
-        // Add player movement controls
-        if (this.cursors.left.isDown) {
-            this.player.setVelocityX(-200);
-        } else if (this.cursors.right.isDown) {
-            this.player.setVelocityX(200);
-        } else {
-            this.player.setVelocityX(0);
-        }
-
-        if (this.jumpButton.isDown && this.player.body.blocked.down) {
-            this.player.setVelocityY(-300);
+        if (this.player.x >= 500 && this.player.y >= 400) {
+            if (!this.fadeTriggered) {
+                this.fadeTriggered = true;
+                this.cameras.main.fadeOut(2000, () => {
+                  this.cameras.main.on('camerafadeoutcomplete', () => {
+                    this.scene.start('game');
+                  }, this);
+                });
+              }
         }
     }
+
+
 }
