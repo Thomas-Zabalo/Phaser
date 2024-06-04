@@ -39,22 +39,27 @@ export default class Menu extends Phaser.Scene {
             button.setDisplaySize(220, 40);
 
             // Gestion des événements sur les boutons
-            button.setInteractive()
-                .on('pointerdown', () => {
-                    if (btn.key === 'play') {
-                        button.on('pointerdown', () => {
-                            this.scene.start('Main');
-                        });
-                    }
-                });
+            button.setInteractive();
+
+            button.on('pointerdown', () => {
+                if (btn.key === 'play') {
+                    this.scene.start('Main');
+                }
+                if (btn.key === 'load') {
+
+                }
+                if (btn.key === 'settings') {
+ 
+                }
+                if (btn.key === 'exit') {
+
+                }
+            });
 
             button.on('pointerover', () => {
-                // Ajouter l'effet de brillance s'il n'existe pas déjà
                 if (!button.shineFX) {
                     button.shineFX = button.postFX.addShine(1, 0.2, 5);
                 }
-
-                // Changer le style du bouton et le curseur
                 button.setTint(0xFF8822);
                 this.input.setDefaultCursor('pointer');
             });

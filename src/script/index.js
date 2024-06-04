@@ -1,6 +1,7 @@
-// import Menu from "./menu.js";
-import Main from "./main.js";
-import Game from "./game.js";
+import Menu from "./game/menu.js";
+import Main from "./game/main.js";
+import Game from "./game/game.js";
+import Cinematique from "./game/cinematique.js";
 
 const gameConfig = {
     type: Phaser.AUTO,
@@ -17,7 +18,8 @@ const gameConfig = {
     pixelArt: true,
     antialias: true,
     antialiasGL: true,
-    scene: [ Main, Game]
+    scene: [Menu, Main, Cinematique, Game]
+    // scene: [Game]
 };
 
 export default new Phaser.Game(gameConfig);
