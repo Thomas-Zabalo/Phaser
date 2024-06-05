@@ -56,6 +56,7 @@ export default class Cinematique extends Phaser.Scene {
 
         this.cameras.main.pan(300, 200, 2000);
         this.time.delayedCall(2000, this.startAutoMovement, [], this);
+
     }
 
     createAnimations() {
