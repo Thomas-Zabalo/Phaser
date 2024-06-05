@@ -47,6 +47,13 @@ export default function animation() {
         frameRate: 3,
         repeat: 0
     });
+    
+    this.anims.create({
+        key: 'crouch-idle',
+        frames: this.anims.generateFrameNumbers('crouch-idle', { start: 0, end: 3 }),
+        frameRate: 3,
+        repeat: 0
+    });
 
 
 
