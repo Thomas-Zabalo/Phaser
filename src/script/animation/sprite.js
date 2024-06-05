@@ -5,8 +5,9 @@ export default function sprite() {
     this.load.spritesheet('death', `/src/assets/characters/${skin}/${skin}_death.png`, { frameWidth: 48, frameHeight: 48 });
     this.load.spritesheet('hurt', `/src/assets/characters/${skin}/${skin}_hurt.png`, { frameWidth: 48, frameHeight: 48 });
     this.load.spritesheet('idle', `/src/assets/characters/${skin}/${skin}_idle.png`, { frameWidth: 48, frameHeight: 48 });
+    this.load.spritesheet('glitch', `/src/assets/characters/${skin}/${skin}_idle-glitch.png`, { frameWidth: 48, frameHeight: 48 });
     this.load.spritesheet('jump', `/src/assets/characters/${skin}/${skin}_jump.png`, { frameWidth: 48, frameHeight: 48 });
     this.load.spritesheet('punch', `/src/assets/characters/${skin}/${skin}_punch.png`, { frameWidth: 48, frameHeight: 48 });
     this.load.spritesheet('run', `/src/assets/characters/${skin}/${skin}_run.png`, { frameWidth: 48, frameHeight: 48 });
-
+    this.load.spritesheet('super', `/src/assets/characters/${skin}/${skin}_super.png`, { frameWidth: 48, frameHeight: 48 });
 }
