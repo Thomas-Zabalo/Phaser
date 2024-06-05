@@ -1,5 +1,4 @@
 import animation from "../animation/animation.js";
-import deplacement from "../animation/joueur.js";
 import sprite from "../animation/sprite.js";
 
 export default class Cinematique extends Phaser.Scene {
@@ -11,8 +10,10 @@ export default class Cinematique extends Phaser.Scene {
 
     preload() {
         this.load.spritesheet("cat_death", "/src/assets/animals/cat/Death.png", { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet("bird_idle", "/src/assets/animals/bird/Idle.png", { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet("bird_fly", "/src/assets/animals/bird/Walk.png", { frameWidth: 32, frameHeight: 32 });
 
-        this.load.image("Mur", "/src/assets/textures/wall/textures-factory.png");
+        this.load.image("Mur", "/src/assets/textures/wall/textures-factorylebon.png");
         this.load.image("Background", "/src/assets/textures/wall/Background.png");
         this.load.image("Bat1", "/src/assets/textures/wall/Bat1.png");
         this.load.image("Bat2", "/src/assets/textures/wall/Bat2.png");
@@ -21,24 +22,25 @@ export default class Cinematique extends Phaser.Scene {
     }
 
     create() {
+        // Create the tilemap and layers
         const carteDuNiveau = this.add.tilemap("carte");
 
-        const backgroundImageTileset = carteDuNiveau.addTilesetImage("Background", "Background");
-        const Bat1Tileset = carteDuNiveau.addTilesetImage("Bat1", "Bat1");
-        const Bat2Tileset = carteDuNiveau.addTilesetImage("Bat2", "Bat2");
+        this.backgroundImageTileset = carteDuNiveau.addTilesetImage("Background", "Background");
+        this.Bat1Tileset = carteDuNiveau.addTilesetImage("Bat1", "Bat1");
+        this.Bat2Tileset = carteDuNiveau.addTilesetImage("Bat2", "Bat2");
 
-        const murTileset = carteDuNiveau.addTilesetImage("textures-factory", "Mur");
-        const BackgroundTileset = carteDuNiveau.addTilesetImage("textures-factory", "Mur");
-        const SecondTileset = carteDuNiveau.addTilesetImage("textures-factory", "Mur");
+        this.murTileset = carteDuNiveau.addTilesetImage("textures-factory", "Mur");
+        this.BackgroundTileset = carteDuNiveau.addTilesetImage("textures-factory", "Mur");
+        this.SecondTileset = carteDuNiveau.addTilesetImage("textures-factory", "Mur");
 
-        const backgroundImageLayer = carteDuNiveau.createLayer("Img_back", backgroundImageTileset);
-        const bat1Layer = carteDuNiveau.createLayer("Bat1", Bat1Tileset);
-        const bat2Layer = carteDuNiveau.createLayer("Bat2", Bat2Tileset);
-        const backgroundLayer = carteDuNiveau.createLayer("Background", BackgroundTileset);
-        const SecondLayer = carteDuNiveau.createLayer("Second_Plan", SecondTileset);
-        const murLayer = carteDuNiveau.createLayer("First_Plan", murTileset, 0, 0);
+        this.backgroundImageLayer = carteDuNiveau.createLayer("Img_back", this.backgroundImageTileset);
+        this.bat1Layer = carteDuNiveau.createLayer("Bat1", this.Bat1Tileset);
+        this.bat2Layer = carteDuNiveau.createLayer("Bat2", this.Bat2Tileset);
+        this.backgroundLayer = carteDuNiveau.createLayer("Background", this.BackgroundTileset);
+        this.SecondLayer = carteDuNiveau.createLayer("Second_Plan", this.SecondTileset);
+        this.murLayer = carteDuNiveau.createLayer("First_Plan", this.murTileset, 0, 0);
 
-        murLayer.setCollisionByProperty({ collide: true });
+        this.murLayer.setCollisionByProperty({ collide: true });
 
         this.player = this.physics.add.sprite(0, 275, 'idle').setScale(1.5);
         this.player.setSize(10, 35);
@@ -46,20 +48,25 @@ export default class Cinematique extends Phaser.Scene {
         this.player.setCollideWorldBounds(true);
 
         this.cat = this.add.sprite(175, 175, 'cat_death');
+        this.birds = [
+            this.add.sprite(280, 305, 'bird_idle'),
+            this.add.sprite(300, 305, 'bird_idle')
+        ];
 
         this.createAnimations();
 
-        this.physics.add.collider(this.player, murLayer);
+        this.physics.add.collider(this.player, this.murLayer);
         this.cameras.main.setBounds(0, 0, carteDuNiveau.widthInPixels, carteDuNiveau.heightInPixels);
 
         this.physics.world.setBounds(0, 0, carteDuNiveau.widthInPixels, carteDuNiveau.heightInPixels);
         this.cameras.main.setZoom(2);
 
-        this.cameras.main.pan(300, 200, 2000)
+        this.cameras.main.pan(300, 200, 2000);
         this.time.delayedCall(2000, this.startAutoMovement, [], this);
 
+        // Store the tilemap reference for destruction later
+        this.carteDuNiveau = carteDuNiveau;
     }
-
 
 
 
@@ -67,14 +74,37 @@ export default class Cinematique extends Phaser.Scene {
         animation.call(this);
         this.anims.create({
             key: 'cat_death',
-            frames: this.anims.generateFrameNumbers('cat_death', { start: 0, end: 3 }),
+            frames: this.anims.generateFrameNumbers('cat_death', { start: 0, end: 7 }),
+            frameRate: 6,
+            repeat: -1
+        });
+        this.cat.play("cat_death");
+
+        this.anims.create({
+            key: 'bird_idle',
+            frames: this.anims.generateFrameNumbers('bird_idle', { start: 0, end: 3 }),
             frameRate: 6,
             repeat: -1
         });
 
-        this.cat.setFrame(3);
-    }
+        const birdAnimationDelay = 200;
 
+        for (let i = 0; i < this.birds.length; i++) {
+            this.birds[i].play("bird_idle");
+
+            // Ajouter un délai à l'animation de l'oiseau actuel
+            this.time.delayedCall(i * birdAnimationDelay, () => {
+                this.birds[i].anims.play("bird_idle");
+            });
+        }
+
+        this.anims.create({
+            key: 'bird_fly',
+            frames: this.anims.generateFrameNumbers('bird_fly', { start: 0, end: 3 }),
+            frameRate: 6,
+            repeat: -1
+        });
+    }
 
 
     startAutoMovement() {
@@ -89,8 +119,27 @@ export default class Cinematique extends Phaser.Scene {
             },
             onComplete: () => {
                 this.player.anims.play('idle', true);
-                this.time.delayedCall(2000, this.startJump, [], this);
-            }
+
+                this.time.delayedCall(500, () => {
+                    this.player.anims.play('glitch', true);
+                    this.cameras.main.shake(50);
+
+                    this.time.delayedCall(100, () => {
+                        this.player.anims.play('idle', true);
+
+                        this.time.delayedCall(500, () => {
+                            this.player.anims.play('glitch', true);
+                            this.cameras.main.shake(50);
+
+                            this.time.delayedCall(100, () => {
+                                this.player.anims.play('idle', true);
+                                this.time.delayedCall(1000, this.startJump, [], this);
+                            }, [], this);
+                        }, [], this);
+                    }, [], this);
+                }, [], this);
+            },
+            callbackScope: this
         });
     }
 
@@ -116,18 +165,41 @@ export default class Cinematique extends Phaser.Scene {
         });
     }
 
+    makeBirdFly(bird) {
+        this.tweens.add({
+            targets: bird,
+            x: bird.x + 250,
+            y: bird.y - 150,
+            duration: 1500,
+            onComplete: () => {
+                bird.anims.stop();
+                bird.setVisible(false);
+            }
+        });
+    }
+
+
     update() {
+        for (let i = 0; i < this.birds.length; i++) {
+            const playerBirdDistance = Phaser.Math.Distance.Between(this.player.x, this.player.y, this.birds[i].x, this.birds[i].y);
+
+            if (playerBirdDistance < 70 && !this.birds[i].flightTriggered) {
+                this.birds[i].flightTriggered = true;
+                this.birds[i].anims.play('bird_fly', true);
+                this.makeBirdFly(this.birds[i]);
+            }
+        }
+
         if (this.player.x >= 500 && this.player.y >= 400) {
             if (!this.fadeTriggered) {
                 this.fadeTriggered = true;
-                this.cameras.main.fadeOut(2000, () => {
-                  this.cameras.main.on('camerafadeoutcomplete', () => {
-                    this.scene.start('game');
-                  }, this);
+                this.cameras.main.fadeOut(2000, 0, 0, 0, () => {
+                    this.cameras.main.once('camerafadeoutcomplete', () => {
+                        this.scene.start('game');
+                    }, this);
                 });
-              }
+            }
         }
     }
-
 
 }

@@ -64,7 +64,7 @@ export default class Main extends Phaser.Scene {
             button.setInteractive()
                 .on('pointerdown', () => {
                     localStorage.setItem('selectedButton', btn.name);
-                    this.scene.start('game');
+                    this.scene.start('cinematique');
                 });
 
             button.on('pointerover', () => {

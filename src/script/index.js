@@ -12,14 +12,14 @@ const gameConfig = {
         default: 'arcade',
         arcade: {
             gravity: { y: 500 },
-            debug: true,
+            // debug: true,
         },
     },
     pixelArt: true,
     antialias: true,
     antialiasGL: true,
+    // scene: [Cinematique]
     scene: [Menu, Main, Cinematique, Game]
-    // scene: [Game]
 };
 
 export default new Phaser.Game(gameConfig);
