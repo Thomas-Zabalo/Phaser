@@ -4,6 +4,7 @@ export default class Menu extends Phaser.Scene {
     }
 
     preload() {
+        this.load.image("background", '/src/assets/textures/ui/menu/wallpaper.png')
         this.load.image('rectangle', '/src/assets/textures/ui/menu/Rectangle.png');
         this.load.image('play', '/src/assets/textures/ui/menu/play.png');
         this.load.image('load', '/src/assets/textures/ui/menu/load.png');
@@ -12,6 +13,8 @@ export default class Menu extends Phaser.Scene {
     }
 
     create() {
+        let bg = this.add.image(0,0, "background")
+        
         const sceneWidth = this.cameras.main.width;
 
         const text1 = this.add.text(sceneWidth / 2, 72, 'CYBER PSYCHOSE', { font: '64px Cyber' });

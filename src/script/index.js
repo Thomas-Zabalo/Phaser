@@ -16,8 +16,8 @@ const gameConfig = {
         },
     },
     pixelArt: true,
-    antialias: true,
-    antialiasGL: true,
+    // antialias: true,
+    // antialiasGL: true,
     // scene: [Cinematique]
     scene: [Menu, Main, Cinematique, Game]
 };
