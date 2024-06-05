@@ -20,6 +20,7 @@ export default class Cinematique extends Phaser.Scene {
     }
 
     create() {
+        // Create the tilemap and layers
         const carteDuNiveau = this.add.tilemap("carte");
 
         this.backgroundImageTileset = carteDuNiveau.addTilesetImage("Background", "Background");
@@ -57,7 +58,11 @@ export default class Cinematique extends Phaser.Scene {
         this.cameras.main.pan(300, 200, 2000);
         this.time.delayedCall(2000, this.startAutoMovement, [], this);
 
+        // Store the tilemap reference for destruction later
+        this.carteDuNiveau = carteDuNiveau;
     }
+
+
 
     createAnimations() {
         animation.call(this);
@@ -132,13 +137,14 @@ export default class Cinematique extends Phaser.Scene {
         if (this.player.x >= 500 && this.player.y >= 400) {
             if (!this.fadeTriggered) {
                 this.fadeTriggered = true;
-                this.cameras.main.fadeOut(2000, () => {
-                    this.cameras.main.on('camerafadeoutcomplete', () => {
+                this.cameras.main.fadeOut(2000, 0, 0, 0, () => {
+                    this.cameras.main.once('camerafadeoutcomplete', () => {
                         this.scene.start('game');
                     }, this);
                 });
             }
         }
     }
+    
 }
 

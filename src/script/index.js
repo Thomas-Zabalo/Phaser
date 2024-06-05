@@ -16,10 +16,10 @@ const gameConfig = {
         },
     },
     pixelArt: true,
-    // antialias: true,
-    // antialiasGL: true,
-    // scene: [Cinematique]
-    scene: [Menu, Main, Cinematique, Game]
+    antialias: true,
+    antialiasGL: true,
+    scene: [Cinematique]
+    // scene: [Menu, Main, Cinematique, Game]
 };
 
 export default new Phaser.Game(gameConfig);

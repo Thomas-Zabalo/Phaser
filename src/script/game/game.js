@@ -64,7 +64,8 @@ export default class Game extends Phaser.Scene {
          this.cameras.main.setZoom(2);
          
         // this.physics.add.collider(this.player, murLayer);
-
+        this.cameras.main.fadeIn(2000);
+        
         this.cursors = this.input.keyboard.createCursorKeys();
         this.jumpButton = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     }
