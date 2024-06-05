@@ -89,8 +89,27 @@ export default class Cinematique extends Phaser.Scene {
             },
             onComplete: () => {
                 this.player.anims.play('idle', true);
-                this.time.delayedCall(2000, this.startJump, [], this);
-            }
+
+                this.time.delayedCall(500, () => {
+                    this.player.anims.play('glitch', true);
+                    this.cameras.main.shake(50);
+
+                    this.time.delayedCall(100, () => {
+                        this.player.anims.play('idle', true);
+
+                        this.time.delayedCall(500, () => {
+                            this.player.anims.play('glitch', true);
+                            this.cameras.main.shake(50);
+
+                            this.time.delayedCall(100, () => {
+                                this.player.anims.play('idle', true);
+                                this.time.delayedCall(1000, this.startJump, [], this);
+                            }, [], this);
+                        }, [], this);
+                    }, [], this);
+                }, [], this);
+            },
+            callbackScope: this
         });
     }
 
@@ -117,16 +136,16 @@ export default class Cinematique extends Phaser.Scene {
     }
 
     update() {
-        if (this.player.x >= 500 && this.player.y >= 400) {
-            if (!this.fadeTriggered) {
-                this.fadeTriggered = true;
-                this.cameras.main.fadeOut(2000, () => {
-                  this.cameras.main.on('camerafadeoutcomplete', () => {
-                    this.scene.start('game');
-                  }, this);
-                });
-              }
-        }
+        // if (this.player.x >= 500 && this.player.y >= 400) {
+        //     if (!this.fadeTriggered) {
+        //         this.fadeTriggered = true;
+        //         this.cameras.main.fadeOut(2000, () => {
+        //             this.cameras.main.on('camerafadeoutcomplete', () => {
+        //                 this.scene.start('game');
+        //             }, this);
+        //         });
+        //     }
+        // }
     }
 
 
