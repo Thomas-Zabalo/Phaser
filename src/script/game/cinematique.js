@@ -10,6 +10,8 @@ export default class Cinematique extends Phaser.Scene {
 
     preload() {
         this.load.spritesheet("cat_death", "/src/assets/animals/cat/Death.png", { frameWidth: 48, frameHeight: 48 });
+        this.load.spritesheet("bird_idle", "/src/assets/animals/bird/Idle.png", { frameWidth: 32, frameHeight: 32 });
+        this.load.spritesheet("bird_fly", "/src/assets/animals/bird/Walk.png", { frameWidth: 32, frameHeight: 32 });
 
         this.load.image("Mur", "/src/assets/textures/wall/textures-factorylebon.png");
         this.load.image("Background", "/src/assets/textures/wall/Background.png");
@@ -46,6 +48,10 @@ export default class Cinematique extends Phaser.Scene {
         this.player.setCollideWorldBounds(true);
 
         this.cat = this.add.sprite(175, 175, 'cat_death');
+        this.birds = [
+            this.add.sprite(280, 305, 'bird_idle'),
+            this.add.sprite(300, 305, 'bird_idle')
+        ];
 
         this.createAnimations();
 
@@ -72,8 +78,34 @@ export default class Cinematique extends Phaser.Scene {
             frameRate: 6,
             repeat: -1
         });
-        this.cat.play("cat_death")
+        this.cat.play("cat_death");
+
+        this.anims.create({
+            key: 'bird_idle',
+            frames: this.anims.generateFrameNumbers('bird_idle', { start: 0, end: 3 }),
+            frameRate: 6,
+            repeat: -1
+        });
+
+        const birdAnimationDelay = 200;
+
+        for (let i = 0; i < this.birds.length; i++) {
+            this.birds[i].play("bird_idle");
+
+            // Ajouter un délai à l'animation de l'oiseau actuel
+            this.time.delayedCall(i * birdAnimationDelay, () => {
+                this.birds[i].anims.play("bird_idle");
+            });
+        }
+
+        this.anims.create({
+            key: 'bird_fly',
+            frames: this.anims.generateFrameNumbers('bird_fly', { start: 0, end: 3 }),
+            frameRate: 6,
+            repeat: -1
+        });
     }
+
 
     startAutoMovement() {
         this.tweens.add({
@@ -133,7 +165,31 @@ export default class Cinematique extends Phaser.Scene {
         });
     }
 
+    makeBirdFly(bird) {
+        this.tweens.add({
+            targets: bird,
+            x: bird.x + 250,
+            y: bird.y - 150,
+            duration: 1500,
+            onComplete: () => {
+                bird.anims.stop();
+                bird.setVisible(false);
+            }
+        });
+    }
+
+
     update() {
+        for (let i = 0; i < this.birds.length; i++) {
+            const playerBirdDistance = Phaser.Math.Distance.Between(this.player.x, this.player.y, this.birds[i].x, this.birds[i].y);
+
+            if (playerBirdDistance < 70 && !this.birds[i].flightTriggered) {
+                this.birds[i].flightTriggered = true;
+                this.birds[i].anims.play('bird_fly', true);
+                this.makeBirdFly(this.birds[i]);
+            }
+        }
+
         if (this.player.x >= 500 && this.player.y >= 400) {
             if (!this.fadeTriggered) {
                 this.fadeTriggered = true;
@@ -145,6 +201,5 @@ export default class Cinematique extends Phaser.Scene {
             }
         }
     }
-    
-}
 
+}

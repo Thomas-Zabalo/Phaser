@@ -18,8 +18,8 @@ const gameConfig = {
     pixelArt: true,
     antialias: true,
     antialiasGL: true,
-    scene: [Cinematique]
-    // scene: [Menu, Main, Cinematique, Game]
+    // scene: [Cinematique]
+    scene: [Menu, Main, Cinematique, Game]
 };
 
 export default new Phaser.Game(gameConfig);
