@@ -8,6 +8,7 @@ export default class Game extends Phaser.Scene {
     }
 
     preload() {
+        
         // Load Map
         this.load.image("Mur", "/src/assets/textures/wall/textures-factory.png");
         this.load.image("Mur-90", "/src/assets/textures/wall/textures-factory-90.png");
@@ -22,8 +23,8 @@ export default class Game extends Phaser.Scene {
 
 
     create() {
-            const carteDuNiveau = this.add.tilemap("carte");
 
+        const carteDuNiveau = this.add.tilemap("carte");
          
         const murTileset = carteDuNiveau.addTilesetImage("Theone", "Mur");
         const murMirrorTileset = carteDuNiveau.addTilesetImage("textures-factory-mirror", "Mur-Mirror");
@@ -35,33 +36,35 @@ export default class Game extends Phaser.Scene {
         const murs = [murTileset, murMirrorTileset, mur90Tileset, mur180Tileset, mur270Tileset];
 
         const murLayer = carteDuNiveau.createLayer("plateformes", murs, 0, 0);
-
+        const objectsLayer = carteDuNiveau.createLayer("objets-1plan", murs, 0, 0);
 
         
+    
+    
         murLayer.setCollisionByProperty({ collides: true });
 
         // Création du joueur
-        this.player = this.physics.add.sprite(0, -200, 'idle').setScale(2);
+        this.player = this.physics.add.sprite(0, -200, 'idle').setScale(1.5);
         this.player.setSize(10, 35);
         this.player.setOffset(10, 13)
         this.player.setCollideWorldBounds(true);
         // Création des animations
         this.createAnimations();
 
-         // Add collider between the player and the wall layer
-         this.physics.add.collider(this.player, murLayer);
+        // Add collider between the player and the wall layer
+        this.physics.add.collider(this.player, murLayer);
 
-         // Camera follow player and set bounds to the size of the tilemap
-         this.cameras.main.startFollow(this.player);
- 
-         // Set the bounds of the camera to the size of the tilemap
-         this.cameras.main.setBounds(0, 0, carteDuNiveau.widthInPixels, carteDuNiveau.heightInPixels);
- 
-         // Set the bounds of the world to the size of the tilemap
-         this.physics.world.setBounds(0, 0, carteDuNiveau.widthInPixels, carteDuNiveau.heightInPixels);
- 
-         // Set the initial zoom level of the camera
-         this.cameras.main.setZoom(2);
+        // Camera follow player and set bounds to the size of the tilemap
+        this.cameras.main.startFollow(this.player);
+
+        // Set the bounds of the camera to the size of the tilemap
+        this.cameras.main.setBounds(0, 0, carteDuNiveau.widthInPixels, carteDuNiveau.heightInPixels);
+
+        // Set the bounds of the world to the size of the tilemap
+        this.physics.world.setBounds(0, 0, carteDuNiveau.widthInPixels, carteDuNiveau.heightInPixels);
+
+        // Set the initial zoom level of the camera
+        this.cameras.main.setZoom(2);
          
         // this.physics.add.collider(this.player, murLayer);
         this.cameras.main.fadeIn(2000);

@@ -10,4 +10,6 @@ export default function sprite() {
     this.load.spritesheet('punch', `/src/assets/characters/${skin}/${skin}_punch.png`, { frameWidth: 48, frameHeight: 48 });
     this.load.spritesheet('run', `/src/assets/characters/${skin}/${skin}_run.png`, { frameWidth: 48, frameHeight: 48 });
     this.load.spritesheet('crouch', `/src/assets/characters/${skin}/${skin}_sitdown.png`, { frameWidth: 48, frameHeight: 48 });
+    this.load.spritesheet('crouch-idle', `/src/assets/characters/${skin}/${skin}_sitdown_idle.png`, { frameWidth: 48, frameHeight: 48 });
+
 }
