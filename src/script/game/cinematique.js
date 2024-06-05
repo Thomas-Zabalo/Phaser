@@ -63,12 +63,11 @@ export default class Cinematique extends Phaser.Scene {
         animation.call(this);
         this.anims.create({
             key: 'cat_death',
-            frames: this.anims.generateFrameNumbers('cat_death', { start: 0, end: 3 }),
+            frames: this.anims.generateFrameNumbers('cat_death', { start: 0, end: 7 }),
             frameRate: 6,
             repeat: -1
         });
-
-        this.cat.setFrame(3);
+        this.cat.play("cat_death")
     }
 
     startAutoMovement() {
