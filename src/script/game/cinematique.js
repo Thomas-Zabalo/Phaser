@@ -1,5 +1,4 @@
 import animation from "../animation/animation.js";
-import deplacement from "../animation/joueur.js";
 import sprite from "../animation/sprite.js";
 
 export default class Cinematique extends Phaser.Scene {
@@ -12,7 +11,7 @@ export default class Cinematique extends Phaser.Scene {
     preload() {
         this.load.spritesheet("cat_death", "/src/assets/animals/cat/Death.png", { frameWidth: 48, frameHeight: 48 });
 
-        this.load.image("Mur", "/src/assets/textures/wall/textures-factory.png");
+        this.load.image("Mur", "/src/assets/textures/wall/textures-factorylebon.png");
         this.load.image("Background", "/src/assets/textures/wall/Background.png");
         this.load.image("Bat1", "/src/assets/textures/wall/Bat1.png");
         this.load.image("Bat2", "/src/assets/textures/wall/Bat2.png");
@@ -23,22 +22,22 @@ export default class Cinematique extends Phaser.Scene {
     create() {
         const carteDuNiveau = this.add.tilemap("carte");
 
-        const backgroundImageTileset = carteDuNiveau.addTilesetImage("Background", "Background");
-        const Bat1Tileset = carteDuNiveau.addTilesetImage("Bat1", "Bat1");
-        const Bat2Tileset = carteDuNiveau.addTilesetImage("Bat2", "Bat2");
+        this.backgroundImageTileset = carteDuNiveau.addTilesetImage("Background", "Background");
+        this.Bat1Tileset = carteDuNiveau.addTilesetImage("Bat1", "Bat1");
+        this.Bat2Tileset = carteDuNiveau.addTilesetImage("Bat2", "Bat2");
 
-        const murTileset = carteDuNiveau.addTilesetImage("textures-factory", "Mur");
-        const BackgroundTileset = carteDuNiveau.addTilesetImage("textures-factory", "Mur");
-        const SecondTileset = carteDuNiveau.addTilesetImage("textures-factory", "Mur");
+        this.murTileset = carteDuNiveau.addTilesetImage("textures-factory", "Mur");
+        this.BackgroundTileset = carteDuNiveau.addTilesetImage("textures-factory", "Mur");
+        this.SecondTileset = carteDuNiveau.addTilesetImage("textures-factory", "Mur");
 
-        const backgroundImageLayer = carteDuNiveau.createLayer("Img_back", backgroundImageTileset);
-        const bat1Layer = carteDuNiveau.createLayer("Bat1", Bat1Tileset);
-        const bat2Layer = carteDuNiveau.createLayer("Bat2", Bat2Tileset);
-        const backgroundLayer = carteDuNiveau.createLayer("Background", BackgroundTileset);
-        const SecondLayer = carteDuNiveau.createLayer("Second_Plan", SecondTileset);
-        const murLayer = carteDuNiveau.createLayer("First_Plan", murTileset, 0, 0);
+        this.backgroundImageLayer = carteDuNiveau.createLayer("Img_back", this.backgroundImageTileset);
+        this.bat1Layer = carteDuNiveau.createLayer("Bat1", this.Bat1Tileset);
+        this.bat2Layer = carteDuNiveau.createLayer("Bat2", this.Bat2Tileset);
+        this.backgroundLayer = carteDuNiveau.createLayer("Background", this.BackgroundTileset);
+        this.SecondLayer = carteDuNiveau.createLayer("Second_Plan", this.SecondTileset);
+        this.murLayer = carteDuNiveau.createLayer("First_Plan", this.murTileset, 0, 0);
 
-        murLayer.setCollisionByProperty({ collide: true });
+        this.murLayer.setCollisionByProperty({ collide: true });
 
         this.player = this.physics.add.sprite(0, 275, 'idle').setScale(1.5);
         this.player.setSize(10, 35);
@@ -49,19 +48,15 @@ export default class Cinematique extends Phaser.Scene {
 
         this.createAnimations();
 
-        this.physics.add.collider(this.player, murLayer);
+        this.physics.add.collider(this.player, this.murLayer);
         this.cameras.main.setBounds(0, 0, carteDuNiveau.widthInPixels, carteDuNiveau.heightInPixels);
 
         this.physics.world.setBounds(0, 0, carteDuNiveau.widthInPixels, carteDuNiveau.heightInPixels);
         this.cameras.main.setZoom(2);
 
-        this.cameras.main.pan(300, 200, 2000)
+        this.cameras.main.pan(300, 200, 2000);
         this.time.delayedCall(2000, this.startAutoMovement, [], this);
-
     }
-
-
-
 
     createAnimations() {
         animation.call(this);
@@ -74,8 +69,6 @@ export default class Cinematique extends Phaser.Scene {
 
         this.cat.setFrame(3);
     }
-
-
 
     startAutoMovement() {
         this.tweens.add({
@@ -136,17 +129,16 @@ export default class Cinematique extends Phaser.Scene {
     }
 
     update() {
-        // if (this.player.x >= 500 && this.player.y >= 400) {
-        //     if (!this.fadeTriggered) {
-        //         this.fadeTriggered = true;
-        //         this.cameras.main.fadeOut(2000, () => {
-        //             this.cameras.main.on('camerafadeoutcomplete', () => {
-        //                 this.scene.start('game');
-        //             }, this);
-        //         });
-        //     }
-        // }
+        if (this.player.x >= 500 && this.player.y >= 400) {
+            if (!this.fadeTriggered) {
+                this.fadeTriggered = true;
+                this.cameras.main.fadeOut(2000, () => {
+                    this.cameras.main.on('camerafadeoutcomplete', () => {
+                        this.scene.start('game');
+                    }, this);
+                });
+            }
+        }
     }
-
-
 }
+
