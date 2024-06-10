@@ -50,14 +50,14 @@ export default function animation() {
     this.anims.create({
         key: 'crouch',
         frames: this.anims.generateFrameNumbers('crouch', { start: 0, end: 3 }),
-        frameRate: 3,
+        frameRate: 8,
         repeat: 0
     });
     
     this.anims.create({
         key: 'crouch-idle',
         frames: this.anims.generateFrameNumbers('crouch-idle', { start: 0, end: 3 }),
-        frameRate: 3,
+        frameRate: 8,
         repeat: 0
     });
 
