@@ -6,7 +6,7 @@ export default function deplacement() {
     const isJumping = !this.player.body.blocked.down;
     const isFalling = this.player.body.velocity.y > 0;
     const isOnGround = this.player.body.blocked.down;
-    const blockOnTop = this.player.body.blocked.down;
+    const blockOnTop = this.player.body.blocked.up;
     
 
 
